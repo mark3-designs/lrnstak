@@ -1,6 +1,7 @@
-IMAGE:=lrnstak-storage
-CONTAINER:=lrnstak-storage
-PORT:=5005
+IMAGE:=lrnstak-registry
+CONTAINER:=lrnstak-registry
+PORT:=5003
+
 
 setup:
 	@mkdir -p models && sudo chown :1000 models && chmod 775 models
