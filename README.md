@@ -51,7 +51,60 @@ docker-compose down
 docker-compose rm
 ```
 
+### Supported Preprocessing Rules
+
+1. **Flatten Rules:**
+   - Normalize, minimize, maximize, sum, average, log transform, and more.
+   - Apply operations across columns or along rows.
+
+2. **Expand Rules:**
+   - **"Columns":** Expand each feature by creating new features for each element in the original array.
+   - **"Pivot":** Expand features by transposing rows and columns.
+
+3. **Extract Rules:**
+   - Extract information from text, dates, or other structured data.
+
+4. **Classify Rules:**
+   - Train and apply various classifiers, including linear regression, decision tree, random forest, SVM, logistic regression, k-NN, naive Bayes, neural network, and gradient boosting.
+
+
 # Services
+
+## Trainer
+
+The trainer service facilitates training and saving new models to the registry.
+
+**REST Endpoints**
+
+**POST /train/model/{name}**
+
+Train a model.
+
+```
+{
+  version: string,
+  data: [],
+  training_data: [],
+  parameters: {
+  }
+}
+```
+
+## Predictions
+
+The trainer service facilitates training and saving new models to the registry.
+
+**REST Endpoints**
+
+**POST /predict/model/{name}**:
+
+Predict
+```
+{
+  version: string,
+  data: [],
+}
+```
 
 ## Model Registry
 
@@ -89,7 +142,7 @@ curl -s http://localhost:5000/models/model1/v1 | jq
 
 **POST /models/{name}**
 
-Save a model.  If the model name and version already exists, it will be overwritten. 
+Save a model.  If the model name and version already exists, it will be overwritten.
 
 _Request Body_
 ```
@@ -105,43 +158,7 @@ _Request Body_
   }
 }
 ```
-  
 
-## Trainer
-
-The trainer service facilitates training and saving new models to the registry.
-
-**REST Endpoints**
-
-**POST /train/model/{name}**
-
-Train a model.
-
-```
-{
-  version: string,
-  data: [],
-  training_data: [],
-  parameters: {
-  }
-}
-```
-
-## Predictions
-
-The trainer service facilitates training and saving new models to the registry.
-
-**REST Endpoints**
-
-**POST /predict/model/{name}**:
-
-Predict
-```
-{
-  version: string,
-  data: [],
-}
-```
 
 ## Storage
 

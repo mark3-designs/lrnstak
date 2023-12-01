@@ -10,7 +10,7 @@ from sklearn.ensemble import GradientBoostingRegressor
 from sklearn.neighbors import KNeighborsRegressor
 from sklearn.neural_network import MLPRegressor
 
-from processor_rules import Rules
+from import Rules
 
 class Model:
 
@@ -24,7 +24,7 @@ class Model:
         self.log.info(f"PARAMS {parameters}")
         actual_df = pd.DataFrame(input_data)
 
-        preprocessed_df, added_features = Rules(self.log, parameters.get('rules', {})).apply(actual_df)
+        preprocessed_df, added_features = Rules(parameters.get('rules', {})).apply(actual_df, target_label)
 
         self.log.info(f"ADD FEATURES {added_features}")
         self.log.info(f"TRAINING FEATURES {feature_cols}")

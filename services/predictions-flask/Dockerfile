@@ -4,10 +4,9 @@ RUN pip install --upgrade pip && \
     pip install flask requests scikit-learn pandas
 
 WORKDIR /app
-COPY main.py /app
-COPY predictions_module.py /app
-COPY registry_client.py /app
-COPY processor_rules.py /app
+COPY main.py /app/
+COPY lrnstak-*.whl /app/
+RUN pip install ./lrnstak-*.whl
 
 EXPOSE 5000
 

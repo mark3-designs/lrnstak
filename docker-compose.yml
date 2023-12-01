@@ -6,10 +6,18 @@ services:
       context: ./services/predictions-flask
     networks:
       - lrnstak
-  trainer:
+  trainer1:
     image: lrntsak-trainer:latest
     build:
       context: ./services/trainer-flask
+    networks:
+      - lrnstak
+  trainer2:
+    image: lrntsak-trainer:latest
+    networks:
+      - lrnstak
+  trainer3:
+    image: lrntsak-trainer:latest
     networks:
       - lrnstak
   registry:
@@ -27,8 +35,8 @@ services:
     networks:
       - lrnstak
     depends_on:
-      - redis-store
-  redis-store:
+      - redis
+  redis:
     image: redis:latest
     networks:
       - lrnstak
@@ -37,7 +45,8 @@ services:
     ports:
       - "5000:80"
     volumes:
-      - ./conf/proxy-nginx.conf:/etc/nginx/conf.d/default.conf
+      - ./conf/nginx-server.conf:/etc/nginx/nginx.conf
+      - ./conf/nginx-proxy.conf:/etc/nginx/conf.d/default.conf
     networks:
       - lrnstak
 

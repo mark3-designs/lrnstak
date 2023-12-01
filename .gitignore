@@ -1,4 +1,7 @@
 .idea
 *.log
 *.log.*.gz
+build/
+dist/
+out/
 __pycache__

@@ -1,8 +1,8 @@
 import sys
 import logging
 from flask import Flask, request, jsonify
-from predictions_module  import Model
-from registry_client import CachingRegistry, Registry
+from lrnstak import Model
+from lrnstak import CachingRegistry, Registry
 
 app = Flask(__name__)
 

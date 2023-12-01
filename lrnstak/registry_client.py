@@ -33,7 +33,6 @@ class Registry:
             print(f"Error: {response.status_code} - {response.text}")
             return None, None, response.status_code
 
-            from cache import Cache  # Assuming you have a Cache class
 
 class CachingRegistry(Registry):
     def __init__(self, base_url="http://registry:5000/models"):

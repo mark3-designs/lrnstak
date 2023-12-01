@@ -1,0 +1,19 @@
+FROM python:3.8-slim as flask_ml_base
+RUN pip install --upgrade pip && \
+    pip install flask requests scikit-learn pandas
+
+FROM flask_ml_base as tests
+RUN pip install --upgrade pip && \
+    pip install pytest
+COPY lrnstak /work/lrnstak
+COPY tests /work/tests
+#RUN touch /work/__init__.py
+WORKDIR /work
+RUN pytest -s -vvv tests/*_test.py
+
+FROM flask_ml_base
+WORKDIR /build
+COPY lrnstak /build/lrnstak
+COPY setup.py /build/setup.py
+EXPOSE 5000
+CMD ["python", "main.py"]
