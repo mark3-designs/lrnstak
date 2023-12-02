@@ -24,6 +24,8 @@ class Model:
         preprocessed_df, added_features = Rules(parameters.get('rules', {})).apply(actual_df, target_label)
         feature_cols.extend(added_features)
 
+        print(f'features: {feature_cols}')
+
         actual_values = actual_df[['last_uxtime', 'last_timestamp', target_label]].to_dict(orient="index")
         actual_array = [value for key, value in actual_values.items()]
         predictions = model.predict(preprocessed_df[sorted(feature_cols)]).tolist()
