@@ -49,6 +49,13 @@ services:
       - ./conf/nginx-proxy.conf:/etc/nginx/conf.d/default.conf
     networks:
       - lrnstak
+    depends_on:
+      - cache
+      - registry
+      - trainer1
+      - trainer2
+      - trainer3
+      - predictions
 
 networks:
   lrnstak:
