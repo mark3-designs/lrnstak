@@ -31,7 +31,7 @@ def train_and_save_model(model_name):
 
         app.logger.info(f"Training {model_name}/{version} {json.dumps(parameters)}")
 
-        trained_model, results = ModelTrainer(app.logger).train(data, parameters, training_data)
+        trained_model, results = ModelTrainer().train(data, parameters, training_data)
 
         joblib.dump(trained_model, tmp)
 

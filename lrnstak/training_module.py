@@ -28,7 +28,7 @@ class ModelTrainer:
 
 
         input_df = pd.DataFrame(input_data)
-        rules = Rules(self.log, parameters.get('rules', {}))
+        rules = Rules(parameters.get('rules', {}))
         df, added_features = rules.apply(input_df)
 
         feature_cols.extend(added_features)

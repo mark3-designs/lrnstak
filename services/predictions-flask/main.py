@@ -22,7 +22,7 @@ def predict_model(model_name):
         if status == 200:
             print("Predicting...")
             app.logger.info(f"Prediction Running for {model_name}/{version}")
-            prediction = Model(app.logger).evaluate(model, data, parameters)
+            prediction = Model().evaluate(model, data, parameters)
 
             #prediction['symbol'] = data[0]['symbol']
             #prediction['symbol_exchange'] = data[0]['symbol_exchange']
