@@ -22,8 +22,7 @@ class Model:
         actual_df = pd.DataFrame(input_data)
 
         preprocessed_df, added_features = Rules(parameters.get('rules', {})).apply(actual_df, target_label)
-
-#         for name in added_features: feature_cols.append(name)
+        feature_cols.extend(added_features)
 
         actual_values = actual_df[['last_uxtime', 'last_timestamp', target_label]].to_dict(orient="index")
         actual_array = [value for key, value in actual_values.items()]

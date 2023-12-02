@@ -24,6 +24,7 @@ def train_and_save_model(model_name):
         version = request.json['version']
         parameters = request.json.get('parameters', None)
         training_data = request.json.get('training_data', None)
+        testing_data = request.json.get('testing_data', None)
         validation_data = request.json.get('validation_data', None)
 
         if parameters is None:
@@ -31,7 +32,9 @@ def train_and_save_model(model_name):
 
         app.logger.info(f"Training {model_name}/{version} {json.dumps(parameters)}")
 
-        trained_model, results = ModelTrainer().train(data, parameters, training_data)
+        model_trainer = ModelTrainer(parameters)
+
+        trained_model, results = model_trainer.train(data, training_data)
 
         joblib.dump(trained_model, tmp)
 
