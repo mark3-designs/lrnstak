@@ -8,7 +8,7 @@ import joblib
 import requests
 import tempfile
 from flask import Flask, request, jsonify
-from training_module import ModelTrainer
+from lrnstak.training_module import ModelTrainer
 
 
 app = Flask(__name__)
@@ -24,6 +24,7 @@ def train_and_save_model(model_name):
         version = request.json['version']
         parameters = request.json.get('parameters', None)
         training_data = request.json.get('training_data', None)
+        validation_data = request.json.get('validation_data', None)
 
         if parameters is None:
             return jsonify({'message': f'Training parameters are required.'}), 400

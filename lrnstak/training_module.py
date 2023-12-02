@@ -9,7 +9,7 @@ from sklearn.tree import DecisionTreeRegressor
 from sklearn.ensemble import GradientBoostingRegressor
 from sklearn.neighbors import KNeighborsRegressor
 from sklearn.neural_network import MLPRegressor
-from processor_rules import Rules
+from lrnstak.processor_rules import Rules
 from datetime import datetime
 
 class ModelTrainer:

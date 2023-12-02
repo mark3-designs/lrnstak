@@ -78,17 +78,67 @@ The trainer service facilitates training and saving new models to the registry.
 
 **POST /train/model/{name}**
 
-Train a model.
+Train a new machine learning model for a specific symbol and version.
+
+    Endpoint: /train/<string:model_name>
+    Method: POST
+    Parameters:
+        model_name: The name of the model (e.g., AAPL_model_v1).
+        data: The training data for the model.
+        training_data: An optional additional set of training data for the model.
+        validation_data: Data to use for measuring the models' performance/accuracy.
+        version: The version of the model to save after training is complete.
+        parameters: Model training parameters.
 
 ```
 {
   version: string,
   data: [],
   training_data: [],
+  validation_data: [],
   parameters: {
+    rules: {
+      'extract': {
+        'last_timestamp': {
+          'type': 'datetime',
+          'elements': ['month', 'year', 'day_of_week', 'hour']
+        }
+      },
+      'flatten': {
+        'history_change': ['sum', 'min', 'avg'],
+      },
+      'expand': {
+        'history_gain': 'columns',
+      },
+      'classify': {
+        'history_trades': { 'method': 'linear_regression', 'params': { } },
+        'history_volume': { 'method': 'linear_regression', 'params': { } },
+      }
+    ]
   }
 }
 ```
+
+## Model Training Parameters
+
+When training a model, you can specify various parameters to customize the training process. The available parameters include:
+Metadata
+
+* target_label: The target label to predict (e.g., 'last_close').
+* feature_labels: Array of input features used for training.
+* split: Parameters for data splitting (e.g., 'test_size': 0.2, 'random_state': 142).
+* metadata: Additional metadata for the model.
+
+Model Hyperparameters
+* linear_regression: Hyperparameters for Linear Regression.
+* random_forest: Hyperparameters for Random Forest.
+  * random_state: Seed for random number generation.
+  * n_estimators: Number of trees in the forest.
+* decision_tree: Hyperparameters for Decision Tree.
+  * random_state: Seed for random number generation.
+* gradient_boosting: Hyperparameters for Gradient Boosting.
+  * n_estimators: Number of boosting stages.
+  * learning_rate: Step size shrinkage.
 
 ## Predictions
 

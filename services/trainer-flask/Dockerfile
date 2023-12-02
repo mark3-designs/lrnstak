@@ -5,8 +5,8 @@ RUN pip install --upgrade pip && \
 
 WORKDIR /app
 COPY main.py /app
-COPY training_module.py /app
-COPY processor_rules.py /app
+COPY lrnstak-*.whl /app/
+RUN pip install ./lrnstak-*.whl
 
 EXPOSE 5000
 

@@ -10,7 +10,7 @@ from sklearn.ensemble import GradientBoostingRegressor
 from sklearn.neighbors import KNeighborsRegressor
 from sklearn.neural_network import MLPRegressor
 
-from import Rules
+from lrnstak.processor_rules import Rules
 
 class Model:
 

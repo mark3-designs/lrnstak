@@ -1,8 +1,8 @@
 import sys
 import logging
 from flask import Flask, request, jsonify
-from lrnstak import Model
-from lrnstak import CachingRegistry, Registry
+from lrnstak.predictions_module import Model
+from lrnstak.registry_client import CachingRegistry
 
 app = Flask(__name__)
 
@@ -10,7 +10,6 @@ app = Flask(__name__)
 app.logger.setLevel(logging.DEBUG)
 
 registry = CachingRegistry()
-
 
 @app.route('/predict/model/<string:model_name>', methods=['POST'])
 def predict_model(model_name):
