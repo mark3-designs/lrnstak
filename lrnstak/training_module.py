@@ -1,6 +1,7 @@
 import sys
 import requests
 import pandas as pd
+from datetime import datetime
 from sklearn.model_selection import train_test_split
 from sklearn.linear_model import LinearRegression
 from sklearn.ensemble import RandomForestRegressor
@@ -10,11 +11,8 @@ from sklearn.ensemble import GradientBoostingRegressor
 from sklearn.neighbors import KNeighborsRegressor
 from sklearn.neural_network import MLPRegressor
 from lrnstak.processor_rules import Rules
-from datetime import datetime
 
 class ModelTrainer:
-    def __init__(self, logger):
-        self.log = logger
 
     def train(self, input_data, parameters, training_data = None):
         metadata = { 'trained_at': datetime.utcnow().strftime('%Y-%m-%dT%H:%M:%SZ'), **parameters.get('metadata', {}) }
