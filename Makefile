@@ -21,6 +21,9 @@ build: package
 start:
 	@docker-compose up --build -d
 
+restart:
+	@docker-compose restart
+
 stop:
 	@docker-compose stop || echo OK
 
