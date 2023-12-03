@@ -30,7 +30,7 @@ class Model:
         actual_df = pd.DataFrame(input_data)
 
         preprocessed_df, added_features = Rules(parameters.get('rules', {})).apply(actual_df, target_label)
-        feature_cols.extend(added_features)
+        # feature_cols.extend(added_features)
 
         return preprocessed_df, feature_cols, target_label
 
