@@ -32,11 +32,11 @@ def train_and_save_model(model_name):
         if training_data is None:
             return jsonify({'message': f'training_data key is required.'}), 400
 
-        app.logger.info(f"Training {model_name}/{version} {json.dumps(parameters)}")
+        app.logger.info(f"Training {model_name}/{version} {json.dumps(parameters, indent=2)}")
 
         model_trainer = ModelTrainer(parameters)
 
-        app.logger.info(f"Training Data {json.dumps(training_data, indent=2)} ==")
+        # app.logger.info(f"Training Data {json.dumps(training_data, indent=2)} ==")
         trained_model, results = model_trainer.train(training_data, testing_data)
 
         joblib.dump(trained_model, tmp)
