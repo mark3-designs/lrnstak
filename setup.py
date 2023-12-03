@@ -12,6 +12,7 @@ setup(
     install_requires=[
         'scikit-learn',
         'tensorflow',
+        'keras',
         'pandas',
         'requests',
     ],
