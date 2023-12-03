@@ -92,8 +92,20 @@ class ModelTrainer:
         X_train, X_test, y_train, y_test = train_test_split(features, target, **self.split_params)
 
         models = {
-            'tf_sequential': tf.keras.Sequential([
+            'tf_rnn': tf.keras.Sequential([
+                tf.keras.layers.LSTM(64, input_shape=(len(input_data), len(self.feature_cols))),
+                tf.keras.layers.Dense(1)
+            ]),
+            'tf_relu': tf.keras.Sequential([
                 tf.keras.layers.Dense(64, activation='relu', input_shape=(len(self.feature_cols),)),
+                tf.keras.layers.Dense(1)
+            ]),
+            'tf_sigmoid': tf.keras.Sequential([
+                tf.keras.layers.Dense(64, activation='sigmoid', input_shape=(len(self.feature_cols),)),
+                tf.keras.layers.Dense(1)
+            ]),
+            'tf_tanh': tf.keras.Sequential([
+                tf.keras.layers.Dense(64, activation='tanh', input_shape=(len(self.feature_cols),)),
                 tf.keras.layers.Dense(1)
             ]),
         }
