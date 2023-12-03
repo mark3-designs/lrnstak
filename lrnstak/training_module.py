@@ -69,7 +69,7 @@ class ModelTrainer:
 
             if testing_data is not None:
                 # test the model against the testing data provided and score the results
-                td, _ = self.rules.apply(pd.DataFrame(testing_data))
+                td, _ = self.rules.apply(pd.DataFrame(testing_data), self.target_label)
                 score = self._score(model, td[self.feature_cols], td[self.target_label], model_name, 2)
                 scores.append(score)
 
@@ -116,7 +116,7 @@ class ModelTrainer:
 
             if testing_data is not None:
                 # test the model against the testing data provided and score the results
-                td, _ = self.rules.apply(pd.DataFrame(testing_data))
+                td, _ = self.rules.apply(pd.DataFrame(testing_data), self.target_label)
                 score = self._score(model, td[self.feature_cols], td[self.target_label], model_name, 2)
                 score['tf_mse'] = model.evaluate(td[self.feature_cols], td[self.target_label])
                 scores.append(score)
