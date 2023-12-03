@@ -20,7 +20,6 @@ MODEL_REGISTRY_URL = 'http://registry:5000/models'
 def train_and_save_model(model_name):
     tmp = tempfile.NamedTemporaryFile().name
     try:
-        data = request.json['data']
         version = request.json['version']
         parameters = request.json.get('parameters', None)
         training_data = request.json.get('training_data', None)
@@ -34,26 +33,12 @@ def train_and_save_model(model_name):
 
         model_trainer = ModelTrainer(parameters)
 
-        trained_model, results = model_trainer.train(data, training_data)
+        trained_model, results = model_trainer.train(training_data, testing_data)
 
         joblib.dump(trained_model, tmp)
 
         with open(tmp, 'rb') as file:
             model_bytes = file.read()
-
-        trained_with = []
-        trained_with.append(data)
-        if training_data is not None:
-            trained_with.append(training_data)
-
-        payload = {
-            'name': model_name,
-            'version': version,
-            'parameters': parameters,
-            'training_results': results,
-            'training_data': trained_with
-        }
-        print(f"PAYLOAD: {json.dumps(payload)}")
 
         # POST the serialized model to the model registry
         response = requests.post(f'{MODEL_REGISTRY_URL}/json', json={
@@ -62,7 +47,7 @@ def train_and_save_model(model_name):
             'version': version,
             'parameters': parameters,
             'training_results': results,
-            'training_data': trained_with
+            'training_data': training_data
             })
 
         if response.status_code == 200:
