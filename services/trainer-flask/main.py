@@ -27,7 +27,10 @@ def train_and_save_model(model_name):
         validation_data = request.json.get('validation_data', None)
 
         if parameters is None:
-            return jsonify({'message': f'Training parameters are required.'}), 400
+            return jsonify({'message': f'parameters key is required.'}), 400
+
+        if training_data is None:
+            return jsonify({'message': f'training_data key is required.'}), 400
 
         app.logger.info(f"Training {model_name}/{version} {json.dumps(parameters)}")
 

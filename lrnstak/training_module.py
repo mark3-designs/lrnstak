@@ -17,7 +17,11 @@ class ModelTrainer:
 
     def __init__(self, parameters):
         self.engine = parameters.get('engine', 'default')
-        self.metadata = { 'trained_at': datetime.utcnow().strftime('%Y-%m-%dT%H:%M:%SZ'), **parameters.get('metadata', {}) }
+        self.metadata = {
+            'trained_at': datetime.utcnow().strftime('%Y-%m-%dT%H:%M:%SZ'),
+            'engine': self.engine,
+            **parameters.get('metadata', {})
+        }
         self.target_label = parameters.get('target_label', 'last_close')
         self.feature_cols = parameters.get('feature_labels', ['last_open', 'last_trades', 'last_volume', 'percentile_close', 'percentile_high', 'percentile_low', 'price_avg', 'price_min'])
         self.split_params = parameters.get('split', { 'test_size': 0.2, 'random_state': 142 })
@@ -80,8 +84,8 @@ class ModelTrainer:
 
         input_df = pd.DataFrame(input_data)
         df, added_features = self.rules.apply(input_df, self.target_label)
-
         self.feature_cols.extend(added_features)
+
         features = df[self.feature_cols]
         target = df[self.target_label]
 
