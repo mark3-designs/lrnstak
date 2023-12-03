@@ -32,9 +32,8 @@ class ModelTrainer:
         input_df = pd.DataFrame(input_data)
         df, added_features = self.rules.apply(input_df, self.target_label)
 
-        trained_features = sorted(self.feature_cols.copy())
-        trained_features.extend(added_features)
-        features = df[trained_features]
+        self.feature_cols.extend(sorted(added_features))
+        features = df[self.feature_cols]
         target = df[self.target_label]
 
         X_train, X_test, y_train, y_test = train_test_split(features, target, **self.split_params)
@@ -69,7 +68,7 @@ class ModelTrainer:
         best_model_name = min(results, key=lambda model_name: (results[model_name]['mse'], results[model_name]['mae']))
         best_model = models[best_model_name]
 
-        return best_model, { 'metadata': self.metadata, 'scores': scores, 'results': results, 'features': trained_features }
+        return best_model, { 'metadata': self.metadata, 'scores': scores, 'results': results }
 
     def _score(self, model, X, y, algorithm_name, iteration):
         y_pred = model.predict(X)

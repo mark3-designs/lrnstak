@@ -19,7 +19,7 @@ class Model:
 
         actual_values = df[['last_uxtime', 'last_timestamp', target_label]].to_dict(orient="index")
         actual_array = [value for key, value in actual_values.items()]
-        predictions = model.predict(df[sorted(feature_cols)]).tolist()
+        predictions = model.predict(df[feature_cols]).tolist()
         combined = [{"prediction": predicted, **actual} for actual, predicted in zip(actual_array, predictions)]
         return combined
 
@@ -27,10 +27,10 @@ class Model:
         target_label = parameters.get('target_label', 'last_close')
         feature_cols = parameters.get('feature_labels', ['last_open', 'last_trades', 'last_volume', 'percentile_close', 'percentile_high', 'percentile_low', 'price_avg', 'price_min']).copy()
 
-        actual_df = pd.DataFrame(input_data)
+        actual_df = pd.DataFrame(input_data)[feature_cols]
 
         preprocessed_df, added_features = Rules(parameters.get('rules', {})).apply(actual_df, target_label)
-        feature_cols.extend(added_features)
+        # feature_cols.extend(added_features)
 
         return preprocessed_df, feature_cols, target_label
 
