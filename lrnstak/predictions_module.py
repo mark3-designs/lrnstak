@@ -19,7 +19,7 @@ class Model:
 
         actual_values = df[['last_uxtime', 'last_timestamp', target_label]].to_dict(orient="index")
         actual_array = [value for key, value in actual_values.items()]
-        predictions = model.predict(preprocessed_df[sorted(feature_cols)]).tolist()
+        predictions = model.predict(df[sorted(feature_cols)]).tolist()
         combined = [{"prediction": predicted, **actual} for actual, predicted in zip(actual_array, predictions)]
         return combined
 
