@@ -32,7 +32,7 @@ class ModelTrainer:
         input_df = pd.DataFrame(input_data)
         df, added_features = self.rules.apply(input_df, self.target_label)
 
-        self.feature_cols.extend(sorted(added_features))
+        self.feature_cols.extend(added_features)
         features = df[self.feature_cols]
         target = df[self.target_label]
 

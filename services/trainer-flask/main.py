@@ -34,7 +34,7 @@ def train_and_save_model(model_name):
 
         model_trainer = ModelTrainer(parameters)
 
-        trained_model, results = model_trainer.train(parameters, data, training_data)
+        trained_model, results = model_trainer.train(data, training_data)
 
         joblib.dump(trained_model, tmp)
 
