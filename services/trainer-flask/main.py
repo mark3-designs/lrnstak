@@ -36,7 +36,7 @@ def train_and_save_model(model_name):
 
         model_trainer = ModelTrainer(parameters)
 
-        app.logger.info(f"Training Data {json.dumps(training_data[-1], indent=2)} ==")
+        app.logger.info(f"Training Data {json.dumps(training_data, indent=2)} ==")
         trained_model, results = model_trainer.train(training_data, testing_data)
 
         joblib.dump(trained_model, tmp)
