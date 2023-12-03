@@ -93,7 +93,7 @@ class ModelTrainer:
 
         models = {
             'tf_rnn': tf.keras.Sequential([
-                tf.keras.layers.LSTM(64, input_shape=(len(input_data), len(self.feature_cols))),
+                tf.keras.layers.LSTM(64, input_shape=(None,len(self.feature_cols))),
                 tf.keras.layers.Dense(1)
             ]),
             'tf_relu': tf.keras.Sequential([
