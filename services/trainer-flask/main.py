@@ -46,6 +46,15 @@ def train_and_save_model(model_name):
         if training_data is not None:
             trained_with.append(training_data)
 
+        payload = {
+            'name': model_name,
+            'version': version,
+            'parameters': parameters,
+            'training_results': results,
+            'training_data': trained_with
+        }
+        print(f"PAYLOAD: {json.dumps(payload)}")
+
         # POST the serialized model to the model registry
         response = requests.post(f'{MODEL_REGISTRY_URL}/json', json={
             'model': base64.b64encode(model_bytes).decode('utf-8'),

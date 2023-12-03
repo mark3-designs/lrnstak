@@ -14,7 +14,6 @@ from lrnstak.processor_rules import Rules
 
 class Model:
 
-
     def evaluate(self, model, input_data, parameters):
         target_label = parameters.get('target_label', 'last_close')
         feature_cols = parameters.get('feature_labels', ['last_open', 'last_trades', 'last_volume', 'percentile_close', 'percentile_high', 'percentile_low', 'price_avg', 'price_min'])
