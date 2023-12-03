@@ -92,10 +92,10 @@ class ModelTrainer:
         X_train, X_test, y_train, y_test = train_test_split(features, target, **self.split_params)
 
         models = {
-            'tf_rnn': tf.keras.Sequential([
-                tf.keras.layers.LSTM(64, input_shape=(None,len(self.feature_cols))),
-                tf.keras.layers.Dense(1)
-            ]),
+            # 'tf_rnn': tf.keras.Sequential([
+            #     tf.keras.layers.LSTM(64, input_shape=(None,len(self.feature_cols))),
+            #     tf.keras.layers.Dense(1)
+            # ]),
             'tf_relu': tf.keras.Sequential([
                 tf.keras.layers.Dense(64, activation='relu', input_shape=(len(self.feature_cols),)),
                 tf.keras.layers.Dense(1)
