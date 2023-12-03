@@ -3,7 +3,7 @@ FROM python:3.8-slim
 RUN useradd -ms /bin/bash appuser
 
 RUN pip install --upgrade pip && \
-    pip install flask requests scikit-learn pandas && \
+    pip install flask requests scikit-learn pandas tensorflow keras && \
     rm -rf /root/.cache
 
 WORKDIR /app
