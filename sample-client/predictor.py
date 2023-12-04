@@ -3,7 +3,6 @@ import requests
 import json
 from data_source import QuotesSource
 
-
 lrnstak_server = 'localhost:5000'
 quotes = QuotesSource(f'http://{lrnstak_server}/yfinance')
 
@@ -56,15 +55,8 @@ if __name__ == "__main__":
     training_days = 30
     quotes = get_data(symbol, training_days, until)
     next_predictions = run_predictions(symbol, model_version, quotes, features)
-    # NamespacedCache('predicted').put(f'{symbol}_{model_version}', {symbol: next_predictions}, 36 * 60 * 60)
     print(json.dumps(next_predictions))
 
-    # num_threads = len(symbols)
-    # with concurrent.futures.ThreadPoolExecutor(max_workers=num_threads) as executor:
-    #     futures = []
-    #     for symbol in symbols:
-    #         futures.append(executor.submit(process_symbol, symbol))
-    #     concurrent.futures.wait(futures)
 
 
 
