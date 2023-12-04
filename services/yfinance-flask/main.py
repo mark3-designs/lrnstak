@@ -3,6 +3,7 @@ import yfinance as yf
 import sys
 import logging
 import base64
+import threading
 from datetime import datetime, timedelta
 from storage import NamespacedCache
 
@@ -11,6 +12,8 @@ app = Flask(__name__)
 app.logger.setLevel(logging.DEBUG)
 
 storage = NamespacedCache('yfinance', base_url='http://cache:5000/cache')
+
+yfinance_lock = threading.Lock()
 
 @app.route('/yfinance/<string:symbol>/until/<string:until>', methods=['GET'])
 def get_quotes(symbol, until):
@@ -26,7 +29,9 @@ def get_quotes(symbol, until):
         return jsonify(found)
 
     try:
-        data = yf.download(symbol, start=start_date, end=until_date)
+        with yfinance_lock:
+            data = yf.download(symbol, start=start_date, end=until_date)
+
         # Convert column names to lowercase with underscores
         data.columns = [col.lower().replace(' ', '_') for col in data.columns]
         records = data.to_dict(orient='records')

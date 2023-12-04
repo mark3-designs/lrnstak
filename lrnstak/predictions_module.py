@@ -17,7 +17,7 @@ class Model:
     def evaluate(self, model, input_data, parameters):
         df, feature_cols, target_label = self._data_features_target(input_data, parameters)
 
-        actual_values = df[['last_uxtime', 'last_timestamp', target_label]].to_dict(orient="index")
+        actual_values = df.to_dict(orient="index")
         actual_array = [value for key, value in actual_values.items()]
         predictions = model.predict(df[feature_cols]).tolist()
         combined = [{"prediction": predicted, **actual} for actual, predicted in zip(actual_array, predictions)]
