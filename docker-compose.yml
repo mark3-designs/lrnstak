@@ -28,6 +28,14 @@ services:
       - ./models:/app/models
     networks:
       - lrnstak
+  yfinance:
+    image: lrnstak-yfinance:latest
+    build:
+      context: ./services/yfinance-flask
+    networks:
+      - lrnstak
+    depends_on:
+      - cache
   cache:
     image: lrnstak-storage:latest
     build:
@@ -49,6 +57,14 @@ services:
       - ./conf/nginx-proxy.conf:/etc/nginx/conf.d/default.conf
     networks:
       - lrnstak
+    depends_on:
+      - cache
+      - registry
+      - trainer1
+      - trainer2
+      - trainer3
+      - yfinance
+      - predictions
 
 networks:
   lrnstak:

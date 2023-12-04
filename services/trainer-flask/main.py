@@ -20,28 +20,29 @@ MODEL_REGISTRY_URL = 'http://registry:5000/models'
 def train_and_save_model(model_name):
     tmp = tempfile.NamedTemporaryFile().name
     try:
-        data = request.json['data']
         version = request.json['version']
         parameters = request.json.get('parameters', None)
         training_data = request.json.get('training_data', None)
+        testing_data = request.json.get('testing_data', None)
         validation_data = request.json.get('validation_data', None)
 
         if parameters is None:
-            return jsonify({'message': f'Training parameters are required.'}), 400
+            return jsonify({'message': f'parameters key is required.'}), 400
 
-        app.logger.info(f"Training {model_name}/{version} {json.dumps(parameters)}")
+        if training_data is None:
+            return jsonify({'message': f'training_data key is required.'}), 400
 
-        trained_model, results = ModelTrainer(app.logger).train(data, parameters, training_data)
+        app.logger.info(f"Training {model_name}/{version} {json.dumps(parameters, indent=2)}")
+
+        model_trainer = ModelTrainer(parameters)
+
+        # app.logger.info(f"Training Data {json.dumps(training_data, indent=2)} ==")
+        trained_model, results = model_trainer.train(training_data, testing_data)
 
         joblib.dump(trained_model, tmp)
 
         with open(tmp, 'rb') as file:
             model_bytes = file.read()
-
-        trained_with = []
-        trained_with.append(data)
-        if training_data is not None:
-            trained_with.append(training_data)
 
         # POST the serialized model to the model registry
         response = requests.post(f'{MODEL_REGISTRY_URL}/json', json={
@@ -50,7 +51,7 @@ def train_and_save_model(model_name):
             'version': version,
             'parameters': parameters,
             'training_results': results,
-            'training_data': trained_with
+            'training_data': training_data
             })
 
         if response.status_code == 200:

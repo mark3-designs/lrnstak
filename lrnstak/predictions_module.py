@@ -14,29 +14,25 @@ from lrnstak.processor_rules import Rules
 
 class Model:
 
-    def __init__(self, logger):
-        self.log = logger
-
     def evaluate(self, model, input_data, parameters):
-        target_label = parameters.get('target_label', 'last_close')
-        feature_cols = parameters.get('feature_labels', ['last_open', 'last_trades', 'last_volume', 'percentile_close', 'percentile_high', 'percentile_low', 'price_avg', 'price_min'])
+        df, feature_cols, target_label = self._data_features_target(input_data, parameters)
 
-        self.log.info(f"PARAMS {parameters}")
-        actual_df = pd.DataFrame(input_data)
-
-        preprocessed_df, added_features = Rules(parameters.get('rules', {})).apply(actual_df, target_label)
-
-        self.log.info(f"ADD FEATURES {added_features}")
-        self.log.info(f"TRAINING FEATURES {feature_cols}")
-
-#         for name in added_features: feature_cols.append(name)
-
-        actual_values = actual_df[['last_uxtime', 'last_timestamp', target_label]].to_dict(orient="index")
+        actual_values = df[['last_uxtime', 'last_timestamp', target_label]].to_dict(orient="index")
         actual_array = [value for key, value in actual_values.items()]
-        predictions = model.predict(preprocessed_df[sorted(feature_cols)]).tolist()
+        predictions = model.predict(df[feature_cols]).tolist()
         combined = [{"prediction": predicted, **actual} for actual, predicted in zip(actual_array, predictions)]
         return combined
 
+    def _data_features_target(self, input_data, parameters):
+        target_label = parameters.get('target_label', 'last_close')
+        feature_cols = parameters.get('feature_labels', ['last_open', 'last_trades', 'last_volume', 'percentile_close', 'percentile_high', 'percentile_low', 'price_avg', 'price_min']).copy()
+
+        actual_df = pd.DataFrame(input_data)
+
+        preprocessed_df, added_features = Rules(parameters.get('rules', {})).apply(actual_df, target_label)
+        # feature_cols.extend(added_features)
+
+        return preprocessed_df, feature_cols, target_label
 
     def predict(self, input_data, target_label = 'last_close', feature_cols = ['last_open', 'last_trades', 'last_volume', 'percentile_close', 'percentile_high', 'percentile_low', 'price_avg', 'price_min']):
 
@@ -76,9 +72,6 @@ class Model:
         worst_model_name = max(results, key=results.get)
         best_model = models[best_model_name]
         worst_model = models[worst_model_name]
-
-        best_predicted_price = best_model.predict(actual_df[feature_cols])[-1]
-        worst_predicted_price = worst_model.predict(actual_df[feature_cols])[-1]
 
         # parameters = {}
         # parameters['feature_labels'] = feature_cols

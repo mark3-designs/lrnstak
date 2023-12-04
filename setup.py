@@ -2,7 +2,7 @@ from setuptools import setup, find_packages
 
 setup(
     name='lrnstak',
-    version='0.1.0',
+    version='0.1.1',
     description='A versatile machine learning framework for feature engineering and model training.',
     author='KWIQ Solutions, LLC',
     author_email='info@kwiqsolutions.com',
@@ -11,7 +11,10 @@ setup(
     ],
     install_requires=[
         'scikit-learn',
+        'tensorflow',
+        'keras',
         'pandas',
+        'requests',
     ],
     classifiers=[
         'Programming Language :: Python :: 3',

@@ -218,16 +218,16 @@ class ClassifyRules(PreProcessor):
                     f'{name}_value': values
                 })
 
-                print("Flattened DF:")
-                print(flattened_df.to_string(index=False))
+                # print("Flattened DF:")
+                # print(flattened_df.to_string(index=False))
 
                 # Train the classifier on the flattened DataFrame and make predictions
                 fitted = classifier.fit(flattened_df[[f'{name}_value']][:-1], flattened_df[f'{name}_value'][1:])
 #                 fitted = classifier.fit(flattened_df[[f'{name}_value']], flattened_df[f'{name}_value'])
                 predictions = fitted.predict(flattened_df[[f'{name}_value']])
 
-                print("PREDICTIONS NP-ARRAY:")
-                print(predictions)
+                # print("PREDICTIONS NP-ARRAY:")
+                # print(predictions)
 
                 predictions_next[idx] = predictions[-1]
                 predictions_mean[idx] = predictions.mean()

@@ -20,14 +20,14 @@ def predict_model(model_name):
         model, parameters, status = registry.get_and_cache(model_name, version)
 
         if status == 200:
-            print("Predicting...")
-            app.logger.info(f"Prediction Running for {model_name}/{version}")
-            prediction = Model(app.logger).evaluate(model, data, parameters)
-
-            #prediction['symbol'] = data[0]['symbol']
-            #prediction['symbol_exchange'] = data[0]['symbol_exchange']
-            #prediction['timestamp'] = data[-1]['last_timestamp']
-            return jsonify(prediction)
+            try:
+                app.logger.info(f"Prediction Running for {model_name}/{version}")
+                app.logger.info(f"Parameters: {parameters}")
+                prediction = Model().evaluate(model, data, parameters)
+                return jsonify(prediction)
+            except Exception as e:
+                app.logger.exception("EVAL ERROR", str(e))
+                return jsonify({'error': str(e)}), 500
         else:
             return jsonify({'error': 'registry failure'}), status
 
