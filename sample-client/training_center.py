@@ -4,7 +4,6 @@ import concurrent.futures
 from data_source import QuotesSource
 
 lrnstak_server = 'localhost:5000'
-
 quotes = QuotesSource(f'http://{lrnstak_server}/yfinance')
 
 def train_model(symbol, model_name, model_version, parameters, days):
@@ -74,22 +73,70 @@ if __name__ == "__main__":
         'features': ['open', 'high', 'low', 'volume'],
         'rules': { }
     })
+    model_definitions.append({
+        'engine': 'default',
+        'version': 'default',
+        'target': 'high',
+        'features': ['open', 'high', 'low', 'volume'],
+        'rules': { }
+    })
+    model_definitions.append({
+        'engine': 'default',
+        'version': 'default',
+        'target': 'low',
+        'features': ['open', 'high', 'low', 'volume'],
+        'rules': { }
+    })
 
     model_definitions.append({
         'engine': 'tensorflow',
-        'version': 'default',
+        'version': 'v1',
         'target': 'close',
         'features': ['open', 'high', 'low', 'volume'],
+        'rules': { }
+    })
+    model_definitions.append({
+        'engine': 'tensorflow',
+        'version': 'v1',
+        'target': 'high',
+        'features': ['open', 'high', 'low', 'volume'],
+        'rules': { }
+    })
+    model_definitions.append({
+        'engine': 'tensorflow',
+        'version': 'v1',
+        'target': 'low',
+        'features': ['open', 'high', 'low', 'volume'],
+        'rules': { }
+    })
+
+    model_definitions.append({
+        'engine': 'default',
+        'version': 'v2',
+        'target': 'close',
+        'features': ['high', 'low'],
+        'rules': { }
+    })
+    model_definitions.append({
+        'engine': 'default',
+        'version': 'v2',
+        'target': 'high',
+        'features': ['high', 'low'],
+        'rules': { }
+    })
+    model_definitions.append({
+        'engine': 'default',
+        'version': 'v2',
+        'target': 'low',
+        'features': ['high', 'low'],
         'rules': { }
     })
 
     def process(model_definition, symbol):
         print(symbol)
+        engine = model_definition.get('engine', 'default')
         version = model_definition.get('version', 'default')
-        if model_definition.get('engine', 'default') == 'default':
-            make_models(symbol, "default", f'{version}.sk', model_definition['target'], model_definition['features'], model_definition['rules'], training_days)
-        else:
-            make_models(symbol, model_definition['engine'], f'{version}.tf', model_definition['target'], model_definition['features'], model_definition['rules'], training_days)
+        make_models(symbol, engine, f'{version}', model_definition['target'], model_definition['features'], model_definition['rules'], training_days)
 
 
     concurrent_mode = True
