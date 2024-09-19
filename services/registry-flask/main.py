@@ -112,7 +112,8 @@ def list_models():
 
 @app.route('/models/<string:model_name>/best', methods=['GET'])
 def best_model(model_name):
-    return jsonify(storage.get_best_model(model_name))
+    filters = request.args
+    return jsonify(storage.get_best_model(model_name, filters))
 
 
 if __name__ == '__main__':

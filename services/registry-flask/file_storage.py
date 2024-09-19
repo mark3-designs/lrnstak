@@ -105,7 +105,13 @@ class Storage:
                 })
         return models_list
 
-    def get_best_model(self, model_id):
+    def __exclude(self, data, filters):
+        for key, val in filters.items():
+            if data.get(key) != val:
+                return True
+        return False
+
+    def get_best_model(self, model_id, filters={}):
         models_dir = '/app/models/'
         model_path = os.path.join(models_dir, model_id)
 
@@ -120,11 +126,15 @@ class Storage:
             parameters_json_file = os.path.join(model_path, version, 'parameters.json')
 
             if os.path.isfile(scores_json_file):
-                with open(scores_json_file) as f:
-                    scores = json.load(f)
-
                 with open(parameters_json_file) as f:
                     parameters = json.load(f)
+
+                metadata = parameters.get('metadata', {})
+                if self.__exclude(metadata, filters):
+                    continue
+
+                with open(scores_json_file) as f:
+                    scores = json.load(f)
                     # Assume we're interested in the lowest MSE
                     for score in scores['scores']:
                         if score['mse'] < best_score:
