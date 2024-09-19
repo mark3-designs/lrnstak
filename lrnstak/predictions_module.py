@@ -1,5 +1,3 @@
-import sys
-import requests
 import pandas as pd
 from sklearn.model_selection import train_test_split
 from sklearn.linear_model import LinearRegression
@@ -11,6 +9,7 @@ from sklearn.neighbors import KNeighborsRegressor
 from sklearn.neural_network import MLPRegressor
 
 from lrnstak.processor_rules import Rules
+
 
 class Model:
 
@@ -25,7 +24,9 @@ class Model:
 
     def _data_features_target(self, input_data, parameters):
         target_label = parameters.get('target_label', 'last_close')
-        feature_cols = parameters.get('feature_labels', ['last_open', 'last_trades', 'last_volume', 'percentile_close', 'percentile_high', 'percentile_low', 'price_avg', 'price_min']).copy()
+        feature_cols = parameters.get('feature_labels',
+                                      ['last_open', 'last_trades', 'last_volume', 'percentile_close', 'percentile_high',
+                                       'percentile_low', 'price_avg', 'price_min']).copy()
 
         actual_df = pd.DataFrame(input_data)
 
@@ -34,24 +35,27 @@ class Model:
 
         return preprocessed_df, feature_cols, target_label
 
-    def predict(self, input_data, target_label = 'last_close', feature_cols = ['last_open', 'last_trades', 'last_volume', 'percentile_close', 'percentile_high', 'percentile_low', 'price_avg', 'price_min']):
-
+    def predict(self, input_data, target_label='last_close',
+                feature_cols=['last_open', 'last_trades', 'last_volume', 'percentile_close', 'percentile_high',
+                              'percentile_low', 'price_avg', 'price_min']):
         actual_df = pd.DataFrame(input_data)
-        train_df = pd.DataFrame(input_data[0:len(input_data)-1])
+        train_df = pd.DataFrame(input_data[0:len(input_data) - 1])
 
         target = train_df[target_label]
 
-        X_train, X_test, y_train, y_test = train_test_split(train_df[feature_cols], target, test_size=0.2, random_state=142)
-        X_predict, _, _, _ = train_test_split(actual_df[feature_cols], actual_df[target_label], test_size=0.1, random_state=142)
+        X_train, X_test, y_train, y_test = train_test_split(train_df[feature_cols], target, test_size=0.2,
+                                                            random_state=142)
+        X_predict = actual_df[feature_cols]
 
         # Define models and their variations
         models = {
             'linear_regression': LinearRegression(),
             'random_forest': RandomForestRegressor(n_estimators=300, random_state=142),
             'decision_tree': DecisionTreeRegressor(random_state=142),
-            'gradient_boosting': GradientBoostingRegressor(n_estimators=300, learning_rate=0.1, max_depth=8, random_state=142),
-#             'knn_regression': KNeighborsRegressor(n_neighbors=5),
-#             'neural_network': MLPRegressor(hidden_layer_sizes=(100, ), max_iter=1000, random_state=142),
+            'gradient_boosting': GradientBoostingRegressor(n_estimators=300, learning_rate=0.1, max_depth=8,
+                                                           random_state=142),
+            #             'knn_regression': KNeighborsRegressor(n_neighbors=5),
+            #             'neural_network': MLPRegressor(hidden_layer_sizes=(100, ), max_iter=1000, random_state=142),
         }
 
         # Train, test, and evaluate each model
@@ -63,7 +67,7 @@ class Model:
             y_pred = model.predict(X_test)
             mse = mean_squared_error(y_test, y_pred)
             print(f"{model_name}:{mse}:{y_pred[-1]}")
-            y_pred = model.predict(actual_df[feature_cols])
+            y_pred = model.predict(X_predict)
             predictions[model_name] = y_pred[-1]
             results[model_name] = mse
 

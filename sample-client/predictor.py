@@ -3,7 +3,7 @@ import requests
 import json
 from data_source import QuotesSource
 
-lrnstak_server = 'localhost:5000'
+lrnstak_server = 'ibconnect.cyberdyne:5000'
 quotes = QuotesSource(f'http://{lrnstak_server}/yfinance')
 
 def get_data(symbol, days, until = None):
@@ -39,10 +39,10 @@ def run_predictions(symbol, model_version, quotes, target_features = ['close']):
 
 
 if __name__ == "__main__":
-    symbols = ['DELL', 'AAPL', 'QQQ', 'LOW', 'TGT', 'WMT', 'INTC', 'AMD', 'MSFT', 'SPWR', 'HMC', 'STLA']
-    symbols.extend(['JNPR', 'TME', 'AAL', 'F'])
-    symbols.extend(['COKE', 'KO', 'OEC', 'ERO', 'GSM', 'HBM', 'BAK', 'SAND', 'AG', 'BAC', 'DHT'])
-    symbols.extend(['PLUG', 'RUN', 'PYPL'])
+    symbols = ['DELL', 'AAPL', 'QQQ', 'LOW', 'TGT', 'WMT', 'INTC', 'AMD', 'MSFT', 'HMC', 'STLA']
+    #symbols.extend(['JNPR', 'TME', 'AAL', 'F'])
+    #symbols.extend(['COKE', 'KO', 'OEC', 'ERO', 'GSM', 'HBM', 'BAK', 'SAND', 'AG', 'BAC', 'DHT'])
+    #symbols.extend(['PLUG', 'RUN', 'PYPL'])
 
     symbol = sys.argv[1] if len(sys.argv) > 1 else 'MSFT'
     model_version = sys.argv[2] if len(sys.argv) > 2 else 'default'

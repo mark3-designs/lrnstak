@@ -3,7 +3,7 @@ from datetime import datetime, timedelta
 import concurrent.futures
 from data_source import QuotesSource
 
-lrnstak_server = 'localhost:5000'
+lrnstak_server = 'ibconnect.cyberdyne:5000'
 quotes = QuotesSource(f'http://{lrnstak_server}/yfinance')
 
 def train_model(symbol, model_name, model_version, parameters, days):
@@ -60,7 +60,8 @@ if __name__ == "__main__":
     symbols = ['DELL', 'AAPL', 'QQQ', 'LOW', 'TGT', 'WMT', 'INTC', 'AMD', 'MSFT', 'HMC', 'STLA']
 
     # symbols = ['AAPL']
-    # symbols = ['MSFT']
+    # symbols = ['SAND', 'AMC']
+    # symbols = ['LPTV']
 
     training_days = 60
 
