@@ -86,3 +86,21 @@ class Storage:
         with open(params_json_file, 'r') as file:
             parameters = json.load(file)
         return model, parameters
+
+    def list(self):
+        models_dir = '/app/models/'
+
+        # List to hold the model data
+        models_list = []
+
+        # Iterate over the directories in the models directory
+        for model_id in os.listdir(models_dir):
+            model_path = os.path.join(models_dir, model_id)
+            if os.path.isdir(model_path):
+                # Get the list of versions for the model
+                versions = [version for version in os.listdir(model_path) if os.path.isdir(os.path.join(model_path, version))]
+                models_list.append({
+                    'model_id': model_id,
+                    'versions': versions
+                })
+        return models_list

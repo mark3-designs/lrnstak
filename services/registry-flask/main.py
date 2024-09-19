@@ -108,8 +108,8 @@ def upload_model_file():
 
 @app.route('/models', methods=['GET'])
 def list_models():
-    model_list = [{'name': model_name, 'versions': [(version.split('_')[1]) for version in models.keys() if model_name in version]} for model_name in set(model.split('_')[0] for model in models.keys())]
-    return jsonify({"models": model_list})
+    return jsonify(storage.list())
+
 
 if __name__ == '__main__':
     print("starting registry service...")
