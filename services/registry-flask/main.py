@@ -110,6 +110,10 @@ def upload_model_file():
 def list_models():
     return jsonify(storage.list())
 
+@app.route('/models/<string:model_name>/best', methods=['GET'])
+def best_model(model_name):
+    return jsonify(storage.get_best_model(model_name))
+
 
 if __name__ == '__main__':
     print("starting registry service...")

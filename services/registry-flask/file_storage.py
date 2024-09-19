@@ -100,7 +100,36 @@ class Storage:
                 # Get the list of versions for the model
                 versions = [version for version in os.listdir(model_path) if os.path.isdir(os.path.join(model_path, version))]
                 models_list.append({
-                    'model_id': model_id,
+                    'model': model_id,
                     'versions': versions
                 })
         return models_list
+
+    def get_best_model(self, model_id):
+        models_dir = '/app/models/'
+        model_path = os.path.join(models_dir, model_id)
+
+        if not os.path.isdir(model_path):
+            return None
+
+        best_model = None
+        best_score = float('inf')
+
+        for version in os.listdir(model_path):
+            scores_json_file = os.path.join(model_path, version, 'training_scores.json')
+
+            if os.path.isfile(scores_json_file):
+                with open(scores_json_file) as f:
+                    scores = json.load(f)
+                    # Assume we're interested in the lowest MSE
+                    for score in scores['scores']:
+                        if score['mse'] < best_score:
+                            best_score = score['mse']
+                            best_model = {
+                                'model_id': model_id,
+                                'version': version,
+                                'best_score': best_score,
+                                'details': score
+                            }
+
+        return best_model
