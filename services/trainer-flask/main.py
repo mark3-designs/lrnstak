@@ -14,7 +14,8 @@ from lrnstak.training_module import ModelTrainer
 app = Flask(__name__)
 app.logger.setLevel(logging.DEBUG)
 
-MODEL_REGISTRY_URL = 'http://registry:5000/models'
+#MODEL_REGISTRY_URL = 'http://registry:5000/models'
+MODEL_REGISTRY_URL = 'http://10.6.88.8:5201/models'
 
 @app.route('/train/<string:model_name>', methods=['POST'])
 def train_and_save_model(model_name):

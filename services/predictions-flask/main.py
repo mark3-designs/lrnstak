@@ -9,7 +9,7 @@ app = Flask(__name__)
 # Configure Flask app logging
 app.logger.setLevel(logging.DEBUG)
 
-registry = CachingRegistry()
+registry = CachingRegistry('http://10.6.88.8:5201/models')
 
 @app.route('/predict/model/<string:model_name>', methods=['POST'])
 def predict_model(model_name):
