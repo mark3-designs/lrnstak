@@ -4,8 +4,7 @@ import base64
 
 class RedisBackend:
 
-    #def __init__(self, host='redis', port=6379, db=0):
-    def __init__(self, host='10.6.88.8', port=4415, db=0):
+    def __init__(self, host='redis', port=6379, db=0):
         self.redis_client = redis.StrictRedis(host, port, db)
 
     def put(self, key, value, ttl=0):

@@ -5,7 +5,7 @@ from backend import RedisBackend
 
 app = Flask(__name__)
 
-store = RedisBackend('redis', 6379, 0)
+store = RedisBackend('10.6.88.8', 4415, 0)
 
 @app.route('/cache/<string:key>', methods=['PUT', 'POST'])
 def put_kv(key):
