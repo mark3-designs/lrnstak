@@ -18,6 +18,12 @@ build: package
 	cp dist/lrnstak-*.whl services/trainer-flask/
 	@docker-compose build
 
+publish: build
+
+tag:
+	docker tag lrnstak-registry dockerhub.cyberdyne/lrnstak/registry:latest
+	docker push dockerhub.cyberdyne/lrnstak/registry:latest
+
 start:
 	@docker-compose up --build -d
 
