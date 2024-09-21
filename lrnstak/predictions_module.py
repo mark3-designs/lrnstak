@@ -18,7 +18,7 @@ class Model:
 
         actual_values = df.to_dict(orient="index")
         actual_array = [value for key, value in actual_values.items()]
-        predictions = model.predict(df[feature_cols]).tolist()
+        predictions = model.predict(df[[target_label]]).tolist()
         combined = [{"prediction": predicted, **actual} for actual, predicted in zip(actual_array, predictions)]
         return combined
 
