@@ -1,6 +1,6 @@
 
 setup:
-	# allows the lrnstak-registry permissions when running via docker-compose to write to the mounted director for storing model files and metadata.
+	# allows the lrnstak-registry permissions when running via docker compose to write to the mounted director for storing model files and metadata.
 	@mkdir -p models && sudo chown :1000 models && sudo chmod 775 models
 
 test:
@@ -16,7 +16,7 @@ build: package
 	cp dist/lrnstak-*.whl services/predictions-flask/
 	cp dist/lrnstak-*.whl services/registry-flask/
 	cp dist/lrnstak-*.whl services/trainer-flask/
-	@docker-compose build
+	@docker compose build
 
 publish: build
 
@@ -25,15 +25,15 @@ tag:
 	docker push dockerhub.cyberdyne/lrnstak/registry:latest
 
 start:
-	@docker-compose up --build -d
+	@docker compose up --build -d
 
 restart:
-	@docker-compose restart
+	@docker compose restart
 
 stop:
-	@docker-compose stop || echo OK
+	@docker compose stop || echo OK
 
 clean: stop
-	@docker-compose rm -f || echo OK
+	@docker compose rm -f || echo OK
 
 

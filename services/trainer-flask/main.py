@@ -7,12 +7,41 @@ import json
 import joblib
 import requests
 import tempfile
+import time
+from datetime import datetime
 from flask import Flask, request, jsonify
 from lrnstak.training_module import ModelTrainer
 
 
 app = Flask(__name__)
 app.logger.setLevel(logging.DEBUG)
+
+# Track startup time for health endpoint
+app.start_time = time.time()
+
+@app.route('/health')
+def health_check():
+    """
+    Health check endpoint for Docker health monitoring
+    Returns service status and basic system info
+    """
+    try:
+        # Basic service health information
+        health_data = {
+            'status': 'healthy',
+            'service': 'lrnstak-trainer',
+            'timestamp': datetime.utcnow().isoformat(),
+            'uptime': time.time() - app.start_time
+        }
+        
+        return health_data, 200
+        
+    except Exception as e:
+        return {
+            'status': 'unhealthy',
+            'error': str(e),
+            'timestamp': datetime.utcnow().isoformat()
+        }, 500
 
 MODEL_REGISTRY_URL = 'http://registry:5000/models'
 #MODEL_REGISTRY_URL = 'http://10.6.88.8:5201/models'

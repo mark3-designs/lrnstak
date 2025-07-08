@@ -3,11 +3,40 @@ import sys
 import logging
 import base64
 import joblib
+import time
+from datetime import datetime
 from file_storage import Utils, Storage
 
 app = Flask(__name__)
 
 app.logger.setLevel(logging.DEBUG)
+
+# Track startup time for health endpoint
+app.start_time = time.time()
+
+@app.route('/health')
+def health_check():
+    """
+    Health check endpoint for Docker health monitoring
+    Returns service status and basic system info
+    """
+    try:
+        # Basic service health information
+        health_data = {
+            'status': 'healthy',
+            'service': 'lrnstak-registry',
+            'timestamp': datetime.utcnow().isoformat(),
+            'uptime': time.time() - app.start_time
+        }
+        
+        return health_data, 200
+        
+    except Exception as e:
+        return {
+            'status': 'unhealthy',
+            'error': str(e),
+            'timestamp': datetime.utcnow().isoformat()
+        }, 500
 
 # In-memory storage
 models = {}
