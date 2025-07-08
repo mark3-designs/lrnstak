@@ -1,0 +1,12 @@
+README.md
+setup.py
+lrnstak/__init__.py
+lrnstak/predictions_module.py
+lrnstak/processor_rules.py
+lrnstak/registry_client.py
+lrnstak/training_module.py
+lrnstak.egg-info/PKG-INFO
+lrnstak.egg-info/SOURCES.txt
+lrnstak.egg-info/dependency_links.txt
+lrnstak.egg-info/requires.txt
+lrnstak.egg-info/top_level.txt

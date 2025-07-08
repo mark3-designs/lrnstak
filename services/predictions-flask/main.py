@@ -1,5 +1,7 @@
 import sys
 import logging
+import time
+from datetime import datetime
 from flask import Flask, request, jsonify
 from lrnstak.predictions_module import Model
 from lrnstak.registry_client import CachingRegistry
@@ -9,7 +11,35 @@ app = Flask(__name__)
 # Configure Flask app logging
 app.logger.setLevel(logging.DEBUG)
 
-registry = CachingRegistry()
+# Track startup time for health endpoint
+app.start_time = time.time()
+
+@app.route('/health')
+def health_check():
+    """
+    Health check endpoint for Docker health monitoring
+    Returns service status and basic system info
+    """
+    try:
+        # Basic service health information
+        health_data = {
+            'status': 'healthy',
+            'service': 'lrnstak-predictions',
+            'timestamp': datetime.utcnow().isoformat(),
+            'uptime': time.time() - app.start_time
+        }
+        
+        return health_data, 200
+        
+    except Exception as e:
+        return {
+            'status': 'unhealthy',
+            'error': str(e),
+            'timestamp': datetime.utcnow().isoformat()
+        }, 500
+
+MODEL_REGISTRY_URL = 'http://registry:5000/models'
+registry = CachingRegistry(MODEL_REGISTRY_URL)
 
 @app.route('/predict/model/<string:model_name>', methods=['POST'])
 def predict_model(model_name):

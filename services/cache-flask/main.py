@@ -1,11 +1,49 @@
 from flask import Flask, request, jsonify
 import json
 import base64
+import time
+from datetime import datetime
 from backend import RedisBackend
 
 app = Flask(__name__)
 
-store = RedisBackend('redis', 6379, 0)
+# Track startup time for health endpoint
+app.start_time = time.time()
+
+@app.route('/health')
+def health_check():
+    """
+    Health check endpoint for Docker health monitoring
+    Returns service status and basic system info
+    """
+    try:
+        # Basic service health information
+        health_data = {
+            'status': 'healthy',
+            'service': 'lrnstak-cache',
+            'timestamp': datetime.utcnow().isoformat(),
+            'uptime': time.time() - app.start_time
+        }
+        
+        # Check Redis connectivity
+        try:
+            # Test Redis connectivity via store
+            store.get('test_key')  # This will test the connection
+            health_data['redis_status'] = 'connected'
+        except:
+            health_data['redis_status'] = 'disconnected'
+            health_data['status'] = 'degraded'
+        
+        return health_data, 200
+        
+    except Exception as e:
+        return {
+            'status': 'unhealthy',
+            'error': str(e),
+            'timestamp': datetime.utcnow().isoformat()
+        }, 500
+
+store = RedisBackend('10.6.88.8', 4415, 0)
 
 @app.route('/cache/<string:key>', methods=['PUT', 'POST'])
 def put_kv(key):

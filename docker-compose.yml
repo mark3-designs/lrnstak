@@ -6,20 +6,44 @@ services:
       context: ./services/predictions-flask
     networks:
       - lrnstak
+    healthcheck:
+      test: ["CMD", "python", "-c", "import requests; requests.get('http://localhost:5000/health').raise_for_status()"]
+      interval: 60s
+      timeout: 10s
+      retries: 3
+      start_period: 120s
   trainer1:
     image: lrntsak-trainer:latest
     build:
       context: ./services/trainer-flask
     networks:
       - lrnstak
+    healthcheck:
+      test: ["CMD", "python", "-c", "import requests; requests.get('http://localhost:5000/health').raise_for_status()"]
+      interval: 60s
+      timeout: 10s
+      retries: 3
+      start_period: 120s
   trainer2:
     image: lrntsak-trainer:latest
     networks:
       - lrnstak
+    healthcheck:
+      test: ["CMD", "python", "-c", "import requests; requests.get('http://localhost:5000/health').raise_for_status()"]
+      interval: 60s
+      timeout: 10s
+      retries: 3
+      start_period: 120s
   trainer3:
     image: lrntsak-trainer:latest
     networks:
       - lrnstak
+    healthcheck:
+      test: ["CMD", "python", "-c", "import requests; requests.get('http://localhost:5000/health').raise_for_status()"]
+      interval: 60s
+      timeout: 10s
+      retries: 3
+      start_period: 120s
   registry:
     image: lrnstak-registry:latest
     build:
@@ -28,6 +52,12 @@ services:
       - ./models:/app/models
     networks:
       - lrnstak
+    healthcheck:
+      test: ["CMD", "python", "-c", "import requests; requests.get('http://localhost:5000/health').raise_for_status()"]
+      interval: 60s
+      timeout: 10s
+      retries: 3
+      start_period: 120s
   yfinance:
     image: lrnstak-yfinance:latest
     build:
@@ -36,6 +66,12 @@ services:
       - lrnstak
     depends_on:
       - cache
+    healthcheck:
+      test: ["CMD", "python", "-c", "import requests; requests.get('http://localhost:5000/health').raise_for_status()"]
+      interval: 60s
+      timeout: 10s
+      retries: 3
+      start_period: 120s
   cache:
     image: lrnstak-storage:latest
     build:
@@ -44,6 +80,12 @@ services:
       - lrnstak
     depends_on:
       - redis
+    healthcheck:
+      test: ["CMD", "python", "-c", "import requests; requests.get('http://localhost:5000/health').raise_for_status()"]
+      interval: 60s
+      timeout: 10s
+      retries: 3
+      start_period: 120s
   redis:
     image: redis:latest
     networks:
@@ -58,13 +100,26 @@ services:
     networks:
       - lrnstak
     depends_on:
-      - cache
-      - registry
-      - trainer1
-      - trainer2
-      - trainer3
-      - yfinance
-      - predictions
+      cache:
+        condition: service_healthy
+      registry:
+        condition: service_healthy
+      trainer1:
+        condition: service_healthy
+      trainer2:
+        condition: service_healthy
+      trainer3:
+        condition: service_healthy
+      yfinance:
+        condition: service_healthy
+      predictions:
+        condition: service_healthy
+    healthcheck:
+      test: ["CMD", "curl", "-f", "http://localhost/health"]
+      interval: 60s
+      timeout: 10s
+      retries: 3
+      start_period: 60s
 
 networks:
   lrnstak:

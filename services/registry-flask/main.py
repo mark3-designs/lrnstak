@@ -3,11 +3,40 @@ import sys
 import logging
 import base64
 import joblib
+import time
+from datetime import datetime
 from file_storage import Utils, Storage
 
 app = Flask(__name__)
 
 app.logger.setLevel(logging.DEBUG)
+
+# Track startup time for health endpoint
+app.start_time = time.time()
+
+@app.route('/health')
+def health_check():
+    """
+    Health check endpoint for Docker health monitoring
+    Returns service status and basic system info
+    """
+    try:
+        # Basic service health information
+        health_data = {
+            'status': 'healthy',
+            'service': 'lrnstak-registry',
+            'timestamp': datetime.utcnow().isoformat(),
+            'uptime': time.time() - app.start_time
+        }
+        
+        return health_data, 200
+        
+    except Exception as e:
+        return {
+            'status': 'unhealthy',
+            'error': str(e),
+            'timestamp': datetime.utcnow().isoformat()
+        }, 500
 
 # In-memory storage
 models = {}
@@ -108,8 +137,13 @@ def upload_model_file():
 
 @app.route('/models', methods=['GET'])
 def list_models():
-    model_list = [{'name': model_name, 'versions': [(version.split('_')[1]) for version in models.keys() if model_name in version]} for model_name in set(model.split('_')[0] for model in models.keys())]
-    return jsonify({"models": model_list})
+    return jsonify(storage.list())
+
+@app.route('/models/<string:model_name>/best', methods=['GET'])
+def best_model(model_name):
+    filters = request.args
+    return jsonify(storage.get_best_model(model_name, filters))
+
 
 if __name__ == '__main__':
     print("starting registry service...")

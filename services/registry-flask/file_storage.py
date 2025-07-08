@@ -86,3 +86,65 @@ class Storage:
         with open(params_json_file, 'r') as file:
             parameters = json.load(file)
         return model, parameters
+
+    def list(self):
+        models_dir = '/app/models/'
+
+        # List to hold the model data
+        models_list = []
+
+        # Iterate over the directories in the models directory
+        for model_id in os.listdir(models_dir):
+            model_path = os.path.join(models_dir, model_id)
+            if os.path.isdir(model_path):
+                # Get the list of versions for the model
+                versions = [version for version in os.listdir(model_path) if os.path.isdir(os.path.join(model_path, version))]
+                models_list.append({
+                    'model': model_id,
+                    'versions': versions
+                })
+        return models_list
+
+    def __exclude(self, data, filters):
+        for key, val in filters.items():
+            if data.get(key) != val:
+                return True
+        return False
+
+    def get_best_model(self, model_id, filters={}):
+        models_dir = '/app/models/'
+        model_path = os.path.join(models_dir, model_id)
+
+        if not os.path.isdir(model_path):
+            return None
+
+        best_model = None
+        best_score = float('inf')
+
+        for version in os.listdir(model_path):
+            scores_json_file = os.path.join(model_path, version, 'training_scores.json')
+            parameters_json_file = os.path.join(model_path, version, 'parameters.json')
+
+            if os.path.isfile(scores_json_file):
+                with open(parameters_json_file) as f:
+                    parameters = json.load(f)
+
+                metadata = parameters.get('metadata', {})
+                if self.__exclude(metadata, filters):
+                    continue
+
+                with open(scores_json_file) as f:
+                    scores = json.load(f)
+                    # Assume we're interested in the lowest MSE
+                    for score in scores['scores']:
+                        if score['mse'] < best_score:
+                            best_score = score['mse']
+                            best_model = {
+                                'model': model_id,
+                                'version': version,
+                                'best_score': best_score,
+                                'details': score,
+                                'parameters': parameters
+                            }
+
+        return best_model

@@ -60,7 +60,8 @@ if __name__ == "__main__":
     symbols = ['DELL', 'AAPL', 'QQQ', 'LOW', 'TGT', 'WMT', 'INTC', 'AMD', 'MSFT', 'HMC', 'STLA']
 
     # symbols = ['AAPL']
-    # symbols = ['MSFT']
+    # symbols = ['SAND', 'AMC']
+    # symbols = ['LPTV']
 
     training_days = 60
 
